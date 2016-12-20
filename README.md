@@ -2,9 +2,11 @@
 
 Exporting metrics scraped from mesos state, added reserved task related metrics so far:
 
+```
 reserved_tasks_count
 used_reservations_count
 unrunning_reserved_tasks_count
+```
 
 ## Using Docker
 

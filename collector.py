@@ -75,14 +75,14 @@ class MesosStateCollector(object):
             if isinstance(mval, dict):
                 for lkey, lval in mval.iteritems():
                     metric = self.convert_gauge_metric(
-                        mkey, lval, labels=['marathon_app_id'])
+                        mkey, lval, labels=['marathon_app_id'], label_values=[lkey])
                     yield metric
             else:
                 metric = self.convert_gauge_metric(mkey, mval)
                 yield metric
 
     @classmethod
-    def convert_gauge_metric(cls, metric_key, metric_value, labels=None):
+    def convert_gauge_metric(cls, metric_key, metric_value, labels=None, label_values=None):
         if labels is None:
             gm = GaugeMetricFamily(
                 name=metric_key,
@@ -95,5 +95,5 @@ class MesosStateCollector(object):
                 documentation='from %s' % metric_key,
                 labels=labels,
             )
-            gm.add_metric(labels, metric_value)
+            gm.add_metric(label_values, metric_value)
         return gm
