@@ -92,7 +92,7 @@ class MesosStateCollector(object):
         else:
             gm = GaugeMetricFamily(
                 name=metric_key,
-                documentation='from %s' % metric_key,
+                documentation='from %s' % metric_key + ' for ' + label_values[0],
                 labels=labels,
             )
             gm.add_metric(label_values, metric_value)
