@@ -434,9 +434,9 @@ class TestMesosStateCollector(unittest.TestCase):
         # used generate_latest method for easy assert
         self.mesos_state_collector.get_slaves_info = self.generate_mock_json_with_unrunning_reserved_tasks
         prom_metrics_text = generate_latest(self.mesos_state_collector)
-        expected_text = '''# HELP unrunning_reserved_tasks_count from unrunning_reserved_tasks_count
+        expected_text = '''# HELP unrunning_reserved_tasks_count from unrunning_reserved_tasks_count for infra_marathon-lb
 # TYPE unrunning_reserved_tasks_count gauge
-unrunning_reserved_tasks_count{marathon_app_id="marathon_app_id"} 1.0
+unrunning_reserved_tasks_count{marathon_app_id="infra_marathon-lb"} 1.0
 # HELP used_reservations_count from used_reservations_count
 # TYPE used_reservations_count gauge
 used_reservations_count 1.0
