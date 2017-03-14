@@ -73,13 +73,29 @@ class MesosStateCollector(object):
         reservations = self.check_reservation_duplicates()
         for mkey, mval in reservations.iteritems():
             if isinstance(mval, dict):
+                label_list = []
+                label_value_list = []
                 for lkey, lval in mval.iteritems():
-                    metric = self.convert_gauge_metric(
-                        mkey, lval, labels=['marathon_app_id'], label_values=[lkey])
-                    yield metric
+                    label_list.append(lkey)
+                    label_value_list.append(lval)
+
+                metric = self.convert_gauge_multi_metric(
+                    mkey, label_value_list, labels=['marathon_app_id'], label_values=label_list)
+                yield metric
             else:
                 metric = self.convert_gauge_metric(mkey, mval)
                 yield metric
+
+    @classmethod
+    def convert_gauge_multi_metric(cls, metric_key, metric_multi_val, labels=None, label_values=None):
+        gm = GaugeMetricFamily(
+            name=metric_key,
+            documentation='from %s' % metric_key,
+            labels=labels,
+        )
+        for i in range(0, len(metric_multi_val)):
+            gm.add_metric([label_values[i]], metric_multi_val[i])
+        return gm
 
     @classmethod
     def convert_gauge_metric(cls, metric_key, metric_value, labels=None, label_values=None):
@@ -92,7 +108,7 @@ class MesosStateCollector(object):
         else:
             gm = GaugeMetricFamily(
                 name=metric_key,
-                documentation='from %s' % metric_key + ' for ' + label_values[0],
+                documentation='from %s' % metric_key,
                 labels=labels,
             )
             gm.add_metric(label_values, metric_value)
